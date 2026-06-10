@@ -37,11 +37,20 @@ const conexion = mysql.createConnection({
                   : undefined
 });
 
+// Log de diagnóstico: muestra qué host está intentando usar
+console.log("🔍 Intentando conectar a:", {
+    host: process.env.DB_HOST     || "localhost (⚠️ DB_HOST no definido)",
+    port: process.env.DB_PORT     || "3306 (default)",
+    user: process.env.DB_USER     || "root (⚠️ DB_USER no definido)",
+    database: process.env.DB_NAME || "HangarM_Caz5geN (default)",
+    ssl:  process.env.DB_SSL      || "no definido"
+});
+
 conexion.connect((error) => {
     if (error) {
-        console.log("\u274C Error de conexión:", error.message);
+        console.log("\u274C Error de conexión:", error.code, "-", error.message);
     } else {
-        console.log("\u2705 Conectado a MySQL");
+        console.log("\u2705 Conectado a MySQL correctamente");
     }
 });
 
@@ -183,4 +192,4 @@ app.post("/guardar-compra", (req, res) => {
 
 app.listen(3000, () => {
     console.log("🚀 Servidor funcionando en http://localhost:3000");
-}); 
+});
