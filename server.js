@@ -25,18 +25,23 @@ app.get("/", (req, res) => {
 });
 
 // ── Conexión a MySQL ──────────────────────────────────────────────────────────
+// Lee desde variables de entorno — funciona en local Y en Render/producción
 const conexion = mysql.createConnection({
-    host:     "localhost",
-    user:     "root",
-    password: "04Ms-02-08$&",
-    database: "HangarM_Caz5geN"
+    host:     process.env.DB_HOST || "localhost",
+    port:     process.env.DB_PORT || 3306,
+    user:     process.env.DB_USER || "root",
+    password: process.env.DB_PASS || "04Ms-02-08$&",
+    database: process.env.DB_NAME || "HangarM_Caz5geN",
+    ssl:      process.env.DB_SSL === "true"
+                  ? { rejectUnauthorized: false }
+                  : undefined
 });
 
 conexion.connect((error) => {
     if (error) {
-        console.log("Error de conexión:", error.message);
+        console.log("\u274C Error de conexión:", error.message);
     } else {
-        console.log("✅ Conectado a MySQL");
+        console.log("\u2705 Conectado a MySQL");
     }
 });
 
