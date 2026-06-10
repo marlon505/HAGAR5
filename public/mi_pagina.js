@@ -599,8 +599,8 @@ function mostrarCarrito() {
                         Total: $${total.toLocaleString("en-US")}
                     </h3>
                     <button class="btn-comprar" type="button" style="margin-top:15px;"
-                            onclick="finalizarCompra()">
-                        ✅ Confirmar compra y limpiar carrito
+                            onclick="abrirModalPago()">
+                        💳 Proceder al Pago
                     </button>`
                 }
                 <button class="btn-regresar" type="button" style="margin-top:12px;"
@@ -674,3 +674,362 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarVuelo();
     renderRepuestos("f35");
 });
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  SISTEMA DE PAGO — Modal con tarjeta de crédito o pago físico
+// ══════════════════════════════════════════════════════════════════════════════
+
+function abrirModalPago() {
+    if (carrito.length === 0) return;
+
+    const total = carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
+
+    // ── Inyectar estilos del modal (solo una vez) ─────────────────────────────
+    if (!document.getElementById("estilos-pago")) {
+        const style = document.createElement("style");
+        style.id = "estilos-pago";
+        style.textContent = `
+            #modal-pago {
+                position: fixed; inset: 0;
+                background: rgba(0,0,0,0.85);
+                z-index: 9999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+            }
+            .pago-box {
+                background: #111;
+                border: 2px solid #00ffff;
+                box-shadow: 0 0 30px rgba(0,255,255,0.3);
+                border-radius: 15px;
+                padding: 35px;
+                width: 100%;
+                max-width: 480px;
+                position: relative;
+                color: white;
+                font-family: 'Segoe UI', sans-serif;
+            }
+            .pago-box h3 {
+                color: #00ffff;
+                text-align: center;
+                margin-bottom: 6px;
+                font-weight: 300;
+                letter-spacing: 2px;
+                font-size: 1.2rem;
+            }
+            .pago-total {
+                text-align: center;
+                font-size: 1.2rem;
+                margin-bottom: 22px;
+                color: #aaa;
+            }
+            .metodo-selector {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 22px;
+            }
+            .btn-metodo {
+                flex: 1;
+                padding: 13px;
+                border: 2px solid #333;
+                border-radius: 8px;
+                background: transparent;
+                color: #777;
+                font-size: 14px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .btn-metodo.activo {
+                border-color: #00ffff;
+                color: #00ffff;
+                background: rgba(0,255,255,0.07);
+            }
+            .pago-label {
+                display: block;
+                color: #888;
+                font-size: 12px;
+                margin-bottom: 5px;
+                margin-top: 12px;
+            }
+            .pago-input {
+                width: 100%;
+                padding: 11px 4px;
+                background: transparent;
+                border: none;
+                border-bottom: 1px solid #444;
+                color: white;
+                font-size: 15px;
+                outline: none;
+                transition: border-color 0.2s;
+            }
+            .pago-input:focus { border-bottom-color: #00ffff; }
+            .pago-input::placeholder { color: #444; }
+            .pago-row { display: flex; gap: 16px; }
+            .pago-row > div { flex: 1; }
+            .cambio-box {
+                background: rgba(0,255,153,0.08);
+                border: 1px solid #00ff99;
+                border-radius: 8px;
+                padding: 13px;
+                margin-top: 14px;
+                text-align: center;
+                color: #00ff99;
+                font-size: 1.05rem;
+                font-weight: bold;
+            }
+            .cambio-insuficiente {
+                border-color: #ff4444;
+                color: #ff4444;
+                background: rgba(255,68,68,0.07);
+            }
+            .btn-pagar {
+                width: 100%;
+                padding: 14px;
+                background: linear-gradient(to right, #00d2ff, #9d50bb);
+                color: white;
+                border: none;
+                border-radius: 30px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                margin-top: 22px;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+            .btn-pagar:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0,210,255,0.4);
+            }
+            .btn-cancelar-pago {
+                width: 100%;
+                padding: 10px;
+                background: transparent;
+                color: #666;
+                border: 1px solid #333;
+                border-radius: 30px;
+                font-size: 13px;
+                cursor: pointer;
+                margin-top: 10px;
+                transition: color 0.2s, border-color 0.2s;
+            }
+            .btn-cancelar-pago:hover { color: #fff; border-color: #666; }
+            .pago-error {
+                color: #ff5555;
+                font-size: 13px;
+                text-align: center;
+                margin-top: 12px;
+                min-height: 18px;
+            }
+            .btn-cerrar-pago {
+                position: absolute;
+                top: 14px; right: 18px;
+                background: transparent;
+                border: none;
+                color: #00ffff;
+                font-size: 18px;
+                cursor: pointer;
+                line-height: 1;
+            }
+            .btn-cerrar-pago:hover { color: #fff; }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // ── Eliminar modal previo si existe ───────────────────────────────────────
+    const previo = document.getElementById("modal-pago");
+    if (previo) previo.remove();
+
+    // ── Crear el modal ────────────────────────────────────────────────────────
+    const modal = document.createElement("div");
+    modal.id = "modal-pago";
+    modal.innerHTML = `
+        <div class="pago-box">
+            <button class="btn-cerrar-pago" onclick="cerrarModalPago()">✕</button>
+
+            <h3>💳 MÉTODO DE PAGO</h3>
+            <p class="pago-total">
+                Total: <strong style="color:#00ffff">$${total.toLocaleString("en-US")}</strong>
+            </p>
+
+            <!-- Selector de método -->
+            <div class="metodo-selector">
+                <button class="btn-metodo activo" id="btn-tarjeta"
+                        onclick="seleccionarMetodoPago('tarjeta')">
+                    💳 Tarjeta de Crédito
+                </button>
+                <button class="btn-metodo" id="btn-fisico"
+                        onclick="seleccionarMetodoPago('fisico')">
+                    💵 Pago Físico
+                </button>
+            </div>
+
+            <!-- ── FORMULARIO: Tarjeta de crédito ── -->
+            <div id="form-tarjeta">
+                <label class="pago-label">Nombre en la tarjeta</label>
+                <input class="pago-input" id="p-nombre"
+                       placeholder="Ej: MARLON HERNANDEZ" type="text" autocomplete="off">
+
+                <label class="pago-label">Número de tarjeta</label>
+                <input class="pago-input" id="p-numero"
+                       placeholder="0000 0000 0000 0000" maxlength="19" type="text"
+                       oninput="formatearNumeroTarjeta(this)" autocomplete="off">
+
+                <div class="pago-row">
+                    <div>
+                        <label class="pago-label">Vencimiento</label>
+                        <input class="pago-input" id="p-expiry"
+                               placeholder="MM/AA" maxlength="5" type="text"
+                               oninput="formatearExpiry(this)">
+                    </div>
+                    <div>
+                        <label class="pago-label">CVV</label>
+                        <input class="pago-input" id="p-cvv"
+                               placeholder="•••" maxlength="4" type="password">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── FORMULARIO: Pago físico ── -->
+            <div id="form-fisico" style="display:none">
+                <label class="pago-label">Monto entregado por el cliente ($)</label>
+                <input class="pago-input" id="p-monto"
+                       placeholder="Ingresa el monto en dólares" type="number" min="0" step="0.01"
+                       oninput="calcularCambio(${total})">
+                <div id="cambio-display"></div>
+            </div>
+
+            <div id="error-pago" class="pago-error"></div>
+
+            <button class="btn-pagar" onclick="confirmarPago(${total})">
+                ✅ Confirmar Pago
+            </button>
+            <button class="btn-cancelar-pago" onclick="cerrarModalPago()">
+                Cancelar
+            </button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Clic fuera del cuadro también cierra
+    modal.addEventListener("click", e => {
+        if (e.target === modal) cerrarModalPago();
+    });
+}
+
+// ── Cerrar modal ──────────────────────────────────────────────────────────────
+function cerrarModalPago() {
+    const modal = document.getElementById("modal-pago");
+    if (modal) modal.remove();
+}
+
+// ── Cambiar entre tarjeta y físico ────────────────────────────────────────────
+function seleccionarMetodoPago(metodo) {
+    document.getElementById("form-tarjeta").style.display = metodo === "tarjeta" ? "block" : "none";
+    document.getElementById("form-fisico").style.display  = metodo === "fisico"  ? "block" : "none";
+
+    document.getElementById("btn-tarjeta").className =
+        "btn-metodo" + (metodo === "tarjeta" ? " activo" : "");
+    document.getElementById("btn-fisico").className =
+        "btn-metodo" + (metodo === "fisico"  ? " activo" : "");
+
+    document.getElementById("error-pago").innerText = "";
+    document.getElementById("cambio-display").innerHTML = "";
+}
+
+// ── Formatear número de tarjeta: grupos de 4 dígitos ─────────────────────────
+function formatearNumeroTarjeta(input) {
+    let v = input.value.replace(/\D/g, "").substring(0, 16);
+    input.value = v.replace(/(.{4})/g, "$1 ").trim();
+}
+
+// ── Formatear vencimiento: MM/AA ──────────────────────────────────────────────
+function formatearExpiry(input) {
+    let v = input.value.replace(/\D/g, "").substring(0, 4);
+    if (v.length >= 3) v = v.substring(0, 2) + "/" + v.substring(2);
+    input.value = v;
+}
+
+// ── Calcular cambio en pago físico ────────────────────────────────────────────
+function calcularCambio(total) {
+    const monto  = parseFloat(document.getElementById("p-monto").value) || 0;
+    const cambio = monto - total;
+    const box    = document.getElementById("cambio-display");
+
+    if (!monto) { box.innerHTML = ""; return; }
+
+    if (cambio >= 0) {
+        box.innerHTML = `
+            <div class="cambio-box">
+                ✅ Cambio a devolver:
+                <strong>$${cambio.toLocaleString("en-US", { minimumFractionDigits: 2 })}</strong>
+            </div>`;
+    } else {
+        box.innerHTML = `
+            <div class="cambio-box cambio-insuficiente">
+                ❌ Monto insuficiente — faltan
+                <strong>$${Math.abs(cambio).toLocaleString("en-US", { minimumFractionDigits: 2 })}</strong>
+            </div>`;
+    }
+}
+
+// ── Validar y confirmar pago ──────────────────────────────────────────────────
+function confirmarPago(total) {
+    const errorEl   = document.getElementById("error-pago");
+    const esTarjeta = document.getElementById("btn-tarjeta").classList.contains("activo");
+
+    errorEl.innerText = "";
+
+    if (esTarjeta) {
+        // ── Validación tarjeta ────────────────────────────────────────────────
+        const nombre = document.getElementById("p-nombre").value.trim();
+        const numero = document.getElementById("p-numero").value.replace(/\s/g, "");
+        const expiry = document.getElementById("p-expiry").value.trim();
+        const cvv    = document.getElementById("p-cvv").value.trim();
+
+        if (!nombre) {
+            errorEl.innerText = "⚠️ Ingresa el nombre del titular."; return;
+        }
+        if (numero.length < 16) {
+            errorEl.innerText = "⚠️ El número de tarjeta debe tener 16 dígitos."; return;
+        }
+        if (expiry.length < 5) {
+            errorEl.innerText = "⚠️ Ingresa la fecha de vencimiento (MM/AA)."; return;
+        }
+        const [mm, aa] = expiry.split("/");
+        if (parseInt(mm) < 1 || parseInt(mm) > 12) {
+            errorEl.innerText = "⚠️ Mes de vencimiento inválido."; return;
+        }
+        if (cvv.length < 3) {
+            errorEl.innerText = "⚠️ El CVV debe tener al menos 3 dígitos."; return;
+        }
+    } else {
+        // ── Validación pago físico ────────────────────────────────────────────
+        const monto = parseFloat(document.getElementById("p-monto").value) || 0;
+        if (!monto) {
+            errorEl.innerText = "⚠️ Ingresa el monto entregado por el cliente."; return;
+        }
+        if (monto < total) {
+            errorEl.innerText = `⚠️ Monto insuficiente. Faltan $${(total - monto).toLocaleString("en-US")}.`; return;
+        }
+    }
+
+    // ── Pago aprobado ─────────────────────────────────────────────────────────
+    cerrarModalPago();
+    carrito = [];
+    guardarCarrito();
+
+    const metodoTexto = esTarjeta ? "tarjeta de crédito" : "pago físico";
+    mostrarToast(`🎉 ¡Pago aprobado con ${metodoTexto}! Gracias por su adquisición.`);
+
+    setTimeout(() => {
+        const vistaDetalle = document.getElementById("vista-detalle");
+        if (vistaDetalle) vistaDetalle.style.display = "none";
+        document.querySelectorAll(".section").forEach(s => s.style.display = "none");
+        const docSec = document.getElementById("documentacion");
+        if (docSec) docSec.style.display = "block";
+        document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+        document.querySelector('.nav-item[data-target="documentacion"]')?.classList.add("active");
+    }, 900);
+}
