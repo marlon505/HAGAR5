@@ -62,15 +62,15 @@ window.addEventListener("click", (e) => {
 });
  
 // ══════════════════════════════════════════════════════════════
-//  REGISTRO — guarda nuevo usuario en MySQL ✅ CORREGIDO
+//  REGISTRO — guarda nuevo usuario en MySQL ✅ 
 // ══════════════════════════════════════════════════════════════
 document.getElementById("btnRegistrar").addEventListener("click", async () => {
     const usuario    = document.getElementById("regUsuario").value.trim();
-    const correo     = document.getElementById("regCorreo").value.trim();   // ← LÍNEA CORREGIDA
+    const correo     = document.getElementById("regCorreo").value.trim();   
     const contrasena = document.getElementById("regPass").value;
     const mensaje    = document.getElementById("mensajeReg");
  
-    if (!usuario || !correo || !contrasena) {                               // ← LÍNEA CORREGIDA
+    if (!usuario || !correo || !contrasena) {                               
         mensaje.innerHTML   = "❌ Completa todos los campos";
         mensaje.style.color = "red";
         return;
@@ -80,7 +80,7 @@ document.getElementById("btnRegistrar").addEventListener("click", async () => {
         const res  = await fetch("/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ usuario, correo, contrasena })           // ← LÍNEA CORREGIDA
+            body: JSON.stringify({ usuario, correo, contrasena })           
         });
         const data = await res.json();
  
@@ -91,7 +91,7 @@ document.getElementById("btnRegistrar").addEventListener("click", async () => {
             setTimeout(() => {
                 cerrarModales();
                 document.getElementById("regUsuario").value = "";
-                document.getElementById("regCorreo").value  = "";          // ← LÍNEA CORREGIDA
+                document.getElementById("regCorreo").value  = "";          
                 document.getElementById("regPass").value    = "";
             }, 1800);
         }
