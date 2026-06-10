@@ -1017,6 +1017,23 @@ function confirmarPago(total) {
 
     // ── Pago aprobado ─────────────────────────────────────────────────────────
     cerrarModalPago();
+
+    // Guarda una copia del carrito ANTES de vaciarlo
+    const carritoParaGuardar = [...carrito];
+    const metodoPago         = esTarjeta ? "tarjeta" : "fisico";
+
+    // Envía la compra al servidor para registrarla en MySQL
+    fetch("/guardar-compra", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ carrito: carritoParaGuardar, metodoPago, total })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (!data.success) console.warn("Compra no registrada:", data.mensaje);
+    })
+    .catch(err => console.log("Error al guardar compra:", err));
+
     carrito = [];
     guardarCarrito();
 
