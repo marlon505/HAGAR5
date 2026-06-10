@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HangarM Caz5gen - Base de Datos Táctica de Aviación</title>
+    <link rel="stylesheet" href="mi_pagina_b2.css">
+</head>
+<body>
+
+    <!-- PANTALLA DE INTRODUCCIÓN ELECTRÓNICA -->
+    <div class="intro-overlay">
+        <div class="intro-content">
+            <div class="radar-scan-line"></div>
+            <h1>HANGARM CAZ5GEN</h1>
+            <p class="typing-text">Iniciando sistemas de refuerzos</p>
+            <p class="typing-text">Activando a los deredadores</p>
+            <div class="loading-bar-container">
+                <div class="loading-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BARRA DE NAVEGACIÓN -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-icon">⚡</span> HANGARM CAZ5GEN
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-item active" data-target="inicio">Hangar de Inicio</a>
+                <a href="#" class="nav-item" data-target="sql-db">Panel Base de Datos</a>
+                <a href="#" class="nav-item" data-target="documentacion">Repuestos</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="app-container">
+
+        <!-- SECCIÓN 1 -->
+        <section id="inicio" class="section">
+            <div class="main-content">
+                <div class="header-text">
+                    <h2>SISTEMAS DE QUINTA GENERACIÓN</h2>
+                    <p>Monitoreo global de vectores de superioridad aérea y cazas avanzados multirol.</p>
+                    <div class="dashboard-meta">
+                        <span>Ubicación de Terminal: Nodo Central UNAN-León</span>
+                        <span>Estatus General: <strong style="color: var(--neon-green)">EN LÍNEA</strong></span>
+                    </div>
+                </div>
+
+                <div class="grid-hangar">
+                    <div class="card-avion" onclick="verDetalle('f35')">
+                        <div class="card-glow"></div>
+                        <span class="card-index">F-35</span>
+                        <div class="card-img-container">
+                            <img src="fotos/F-35 Lightning II.jpeg" alt="F-35 Lightning II" class="card-img">
+                        </div>
+                        <h3>F-35 Lightning II</h3>
+                        <p class="card-desc">Caza polivalente furtivo de quinta generación optimizado para entornos de red integrados.</p>
+                        <div class="card-footer">
+                            <span class="badge-gen">5ta Gen</span>
+                            <span class="action-hint">Ver Telemetría →</span>
+                        </div>
+                    </div>
+
+                    <div class="card-avion" onclick="verDetalle('su57')">
+                        <div class="card-glow"></div>
+                        <span class="card-index">Su-57</span>
+                        <div class="card-img-container">
+                            <img src="fotos/Su-57 Felon.jpeg" alt="Su-57 Felon" class="card-img">
+                        </div>
+                        <h3>Su-57 Felon</h3>
+                        <p class="card-desc">Caza polivalente pesado diseñado por Sukhoi con empuje vectorial tridimensional completo.</p>
+                        <div class="card-footer">
+                            <span class="badge-gen">5ta Gen</span>
+                            <span class="action-hint">Ver Telemetría →</span>
+                        </div>
+                    </div>
+
+                    <div class="card-avion" onclick="verDetalle('f22')">
+                        <div class="card-glow"></div>
+                        <span class="card-index">F-22</span>
+                        <div class="card-img-container">
+                            <img src="fotos/F-22 Raptor.jpeg" alt="F-22 Raptor" class="card-img">
+                        </div>
+                        <h3>F-22 Raptor</h3>
+                        <p class="card-desc">Caza de superioridad aérea indiscutible. Sigilo radical y capacidades supercrucero extremas.</p>
+                        <div class="card-footer">
+                            <span class="badge-gen">5ta Gen</span>
+                            <span class="action-hint">Ver Telemetría →</span>
+                        </div>
+                    </div>
+
+                    <div class="card-avion" onclick="verDetalle('j20')">
+                        <div class="card-glow"></div>
+                        <span class="card-index">J-20</span>
+                        <div class="card-img-container">
+                            <img src="fotos/J-20 Mighty Dragon.jpeg" alt="J-20 Mighty Dragon" class="card-img">
+                        </div>
+                        <h3>J-20 Mighty Dragon</h3>
+                        <p class="card-desc">Plataforma pesada furtiva de largo alcance con configuración de planos canard avanzados.</p>
+                        <div class="card-footer">
+                            <span class="badge-gen">5ta Gen</span>
+                            <span class="action-hint">Ver Telemetría →</span>
+                        </div>
+                    </div>
+
+                    <div class="card-avion" onclick="verDetalle('kf21')">
+                        <div class="card-glow"></div>
+                        <span class="card-index">KF-21</span>
+                        <div class="card-img-container">
+                            <img src="fotos/KF-21 Boramae.jpeg" alt="KF-21 Boramae" class="card-img">
+                        </div>
+                        <h3>KF-21 Boramae</h3>
+                        <p class="card-desc">Vector de diseño coreano-indonesio con baja observabilidad estructural de última generación.</p>
+                        <div class="card-footer">
+                            <span class="badge-gen">4.5+ Gen</span>
+                            <span class="action-hint">Ver Telemetría →</span>
+                        </div>
+                    </div>
+
+                    <div class="card-avion" onclick="verDetalle('fc31')">
+                        <div class="card-glow"></div>
+                        <span class="card-index">FC-31</span>
+                        <div class="card-img-container">
+                            <img src="fotos/FC-31 Gyrfalcon.jpeg" alt="FC-31 Gyrfalcon" class="card-img">
+                        </div>
+                        <h3>FC-31 Gyrfalcon</h3>
+                        <p class="card-desc">Prototipo de caza medio bimotor bimástil diseñado para despliegues navales en portaaviones.</p>
+                        <div class="card-footer">
+                            <span class="badge-gen">5ta Gen</span>
+                            <span class="action-hint">Ver Telemetría →</span>
+                        </div>
+                    </div>
+
+                    <div class="card-avion" onclick="verDetalle('su75')">
+                        <div class="card-glow"></div>
+                        <span class="card-index">Su-75</span>
+                        <div class="card-img-container">
+                            <img src="fotos/Su-75 Checkmate.jpeg" alt="Su-75 Checkmate" class="card-img">
+                        </div>
+                        <h3>Su-75 Checkmate</h3>
+                        <p class="card-desc">Concepto ligero monomotor sigiloso diseñado con bahías internas de armamento modular.</p>
+                        <div class="card-footer">
+                            <span class="badge-gen">5ta Gen</span>
+                            <span class="action-hint">Ver Telemetría →</span>
+                        </div>
+                    </div>
+
+                    <div class="card-avion" onclick="verDetalle('eurofighter')">
+                        <div class="card-glow"></div>
+                        <span class="card-index">Eurofighter Typhoon</span>
+                        <div class="card-img-container">
+                            <img src="fotos/Eurofighter Typhoon.jpeg" alt="Eurofighter Typhoon" class="card-img">
+                        </div>
+                        <h3>Eurofighter Typhoon</h3>
+                        <p class="card-desc">Caza polivalente de ala delta ágil optimizado para intercepciones dinámicas a gran altitud.</p>
+                        <div class="card-footer">
+                            <span class="badge-gen">4.5 Gen</span>
+                            <span class="action-hint">Ver Telemetría →</span>
+                        </div>
+                    </div>
+
+                    <div class="card-avion" onclick="verDetalle('rafale')">
+                        <div class="card-glow"></div>
+                        <span class="card-index">Dassault Rafale</span>
+                        <div class="card-img-container">
+                            <img src="fotos/Dassault Rafale.jpeg" alt="Dassault Rafale" class="card-img">
+                        </div>
+                        <h3>Dassault Rafale</h3>
+                        <p class="card-desc">Caza polivalente bimotor francés capaz de ejecutar misiones de ataque y defensa.</p>
+                        <div class="card-footer">
+                            <span class="badge-gen">4.5 Gen</span>
+                            <span class="action-hint">Ver Telemetría →</span>
+                        </div>
+                    </div>
+
+                    <div class="card-avion" onclick="verDetalle('a10')">
+                        <div class="card-glow"></div>
+                        <span class="card-index">A-10 Thunderbolt II</span>
+                        <div class="card-img-container">
+                            <img src="fotos/A-10 Thunderbolt II.jpeg" alt="A-10 Thunderbolt II" class="card-img">
+                        </div>
+                        <h3>A-10 Thunderbolt II</h3>
+                        <p class="card-desc">Plataforma especializada de apoyo aéreo cercano armada con el cañón rotativo GAU-8 Avenger.</p>
+                        <div class="card-footer">
+                            <span class="badge-gen">CAS</span>
+                            <span class="action-hint">Ver Telemetría →</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2 -->
+        <section id="sql-db" class="section" style="display: none;">
+            <div class="main-content">
+                <div class="header-text">
+                    <h2>REGISTRO DE FLOTA EN TIEMPO REAL</h2>
+                    <p>Mapeo matricial de la base de datos de asignación de slots. Simulación de operaciones de red.</p>
+                </div>
+
+                <div class="db-container">
+                    <div class="panel-controles">
+                        <button class="btn-tactico btn-add" onclick="addPlane()">
+                            <span class="btn-icon">✚</span> Activar Ranura Libre
+                        </button>
+                        <button class="btn-tactico btn-remove" onclick="removePlane()">
+                            <span class="btn-icon">✖</span> Desactivar Sistema
+                        </button>
+                        <button class="btn-tactico btn-mission" onclick="lanzarMision()">
+                            <span class="btn-icon">✈</span> Desplegar Misión Táctica
+                        </button>
+                    </div>
+
+                    <div class="summary-box">
+                        <p id="db-status">Sistemas activos: 0 | Slots reservados: 0 | Total : 10</p>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="tabla-sql">
+                            <thead>
+                                <tr>
+                                    <th>SLOT ID</th>
+                                    <th>AERONAVE DE COMBATE ASIGNADA</th>
+                                    <th>ESTADO EN MATRIZ OPERATIVA</th>
+                                </tr>
+                            </thead>
+                            <tbody id="db-rows"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3 -->
+        <section id="documentacion" class="section" style="display: none;">
+            <div class="main-content">
+                <div class="header-text">
+                    <h2>REPUESTOS Y MÓDULOS</h2>
+                    <p>Selecciona motores, armamento, sensores y placas para cada aeronave.</p>
+                </div>
+
+                <div class="doc-card">
+                    <h3>Centro de repuestos tácticos</h3>
+                    <p>Escoge las partes disponibles para cada plataforma. Puedes ver foto, precio y agregar más de una unidad por repuesto.</p>
+
+                    <div class="repuestos-layout">
+                        <div class="repuestos-menu">
+                            <button class="repuesto-btn active" data-plane="f35">F-35</button>
+                            <button class="repuesto-btn" data-plane="su57">Su-57</button>
+                            <button class="repuesto-btn" data-plane="f22">F-22</button>
+                            <button class="repuesto-btn" data-plane="j20">J-20</button>
+                            <button class="repuesto-btn" data-plane="kf21">KF-21</button>
+                            <button class="repuesto-btn" data-plane="fc31">FC-31</button>
+                            <button class="repuesto-btn" data-plane="su75">Su-75</button>
+                            <button class="repuesto-btn" data-plane="eurofighter">Eurofighter</button>
+                            <button class="repuesto-btn" data-plane="rafale">Rafale</button>
+                            <button class="repuesto-btn" data-plane="a10">A-10</button>
+                        </div>
+
+                        <div class="repuestos-panel" id="repuestos-panel"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISTA DETALLE -->
+        <section id="vista-detalle" class="section" style="display: none;"></section>
+
+    </main>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="system-footer">
+        <p>© 2026 HangarM Caz5gen - Panel Avanzado de Ingeniería en Sistemas. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="mi_pagina.js"></script>
+</body>
+</html>

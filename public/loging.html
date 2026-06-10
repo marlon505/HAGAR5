@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Moderno - Cazas</title>
+    <link rel="stylesheet" href="estilos_loging.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+ 
+    <div class="main-wrapper">
+        <div class="login-card">
+            
+            <div class="login-left">
+                <form class="login-form" action="/login" method="POST">
+                    <h2>Iniciar Sesión</h2>
+                    
+                    <div class="input-group">
+                        <label for="user">Usuario o Correo</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="user" name="usuario" placeholder="Ingresa tu usuario" required>
+                            <i class="fa-regular fa-user"></i>
+                        </div>
+                    </div>
+ 
+                    <div class="input-group">
+                        <label for="pass">Contraseña</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="pass" name="contraseña" placeholder="••••••••" required>
+                            <i class="fa-solid fa-lock"></i>
+                        </div>
+                    </div>
+ 
+                    <button type="submit" id="btnEntrar" class="btn-login">Entrar</button>
+                    
+                    <div id="mensaje" style="margin-top: 15px; text-align: center;"></div>
+ 
+                    <div class="footer-links">
+                        <!-- Solo se agregaron los id="..." para conectar el JS. Nada visual cambia -->
+                        <a href="#" id="linkOlvide">¿Olvidaste tu contraseña?</a>
+                        <span>o</span>
+                        <a href="#" id="linkRegistro">Regístrate</a>
+                    </div>
+                </form>
+            </div>
+ 
+            <div class="derecha_img">
+                <img src="fotos/Cazas G5.jpeg" alt="Cazas de quinta generación" class="fighter-image">
+            </div>
+            
+        </div>
+    </div>
+ 
+    <!-- ══════════════════════════════════════════════
+         MODELO: REGISTRO
+    ══════════════════════════════════════════════ -->
+    <div id="modalRegistro" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" type="button">✕</button>
+            <h2>Crear Cuenta</h2>
+ 
+            <div class="input-group">
+                <label>Usuario</label>
+                <div class="input-wrapper">
+                    <input type="text" id="regUsuario" placeholder="Elige un usuario">
+                    <i class="fa-regular fa-user"></i>
+                </div>
+            </div>
+ 
+            <div class="input-group">
+                <label>Correo</label>
+                <div class="input-wrapper">
+                    <input type="email" id="regCorreo" placeholder="correo@ejemplo.com">
+                    <i class="fa-regular fa-envelope"></i>
+                </div>
+            </div>
+ 
+            <div class="input-group">
+                <label>Contraseña</label>
+                <div class="input-wrapper">
+                    <input type="password" id="regPass" placeholder="••••••••">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+            </div>
+ 
+            <button id="btnRegistrar" class="btn-login" type="button">Registrarse</button>
+            <div id="mensajeReg" style="margin-top:15px; text-align:center;"></div>
+        </div>
+    </div>
+ 
+    <!-- ══════════════════════════════════════════════
+         MODELO: OLVIDÉ CONTRASEÑA
+    ══════════════════════════════════════════════ -->
+    <div id="modalOlvide" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" type="button">✕</button>
+            <h2>Recuperar Contraseña</h2>
+ 
+            <div class="input-group">
+                <label>Usuario</label>
+                <div class="input-wrapper">
+                    <input type="text" id="resetUsuario" placeholder="Tu nombre de usuario">
+                    <i class="fa-regular fa-user"></i>
+                </div>
+            </div>
+ 
+            <div class="input-group">
+                <label>Nueva Contraseña</label>
+                <div class="input-wrapper">
+                    <input type="password" id="resetPass" placeholder="Nueva contraseña">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+            </div>
+ 
+            <button id="btnResetPass" class="btn-login" type="button">Actualizar Contraseña</button>
+            <div id="mensajeReset" style="margin-top:15px; text-align:center;"></div>
+        </div>
+    </div>
+    
+    <script src="login.js"></script>
+</body>
+</html>
