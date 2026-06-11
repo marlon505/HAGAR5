@@ -73,7 +73,7 @@ app.post("/login", (req, res) => {
         }
 
         // Compara la contraseña ingresada con el hash guardado
-        const valido = await bcrypt.compare(contraseña, resultados[0].contraseña);
+        const valido = await bcrypt.compare(contraseña, resultados[0].password);
 
         if (valido) {
             // Guarda el usuario en la sesión para usarlo en las compras
@@ -104,7 +104,7 @@ app.post("/register", async (req, res) => {
         // Genera el hash (10 = sal, más alto = más seguro pero más lento)
         const hash = await bcrypt.hash(contrasena, 10);
 
-        const insertSql = "INSERT INTO usuarios (usuario, correo, contraseña) VALUES (?, ?, ?)";
+        const insertSql = "INSERT INTO usuarios (usuario, correo, password) VALUES (?, ?, ?)";
         conexion.query(insertSql, [usuario, correo, hash], (error) => {
             if (error) {
                 console.log(error);
@@ -132,7 +132,7 @@ app.post("/forgot-password", async (req, res) => {
 
         const hash = await bcrypt.hash(contrasena, 10);
 
-        const updateSql = "UPDATE usuarios SET contraseña = ? WHERE usuario = ?";
+        const updateSql = "UPDATE usuarios SET password = ? WHERE usuario = ?";
         conexion.query(updateSql, [hash, usuario], (error) => {
             if (error) {
                 console.log(error);
