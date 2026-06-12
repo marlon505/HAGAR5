@@ -1050,3 +1050,27 @@ function confirmarPago(total) {
         document.querySelector('.nav-item[data-target="documentacion"]')?.classList.add("active");
     }, 900);
 }
+
+// ─── Menú hamburguesa (móvil) ──────────────────────────────────────────────────
+const navToggle = document.getElementById("navToggle");
+const navLinks  = document.getElementById("navLinks");
+ 
+function cerrarMenuMovil() {
+    if (navToggle && navLinks) {
+        navToggle.classList.remove("open");
+        navLinks.classList.remove("open");
+    }
+}
+ 
+if (navToggle && navLinks) {
+    navToggle.addEventListener("click", () => {
+        navToggle.classList.toggle("open");
+        navLinks.classList.toggle("open");
+    });
+ 
+    // Cierra el menú si se hace clic fuera de la navbar
+    document.addEventListener("click", (e) => {
+        const dentroDeNav = e.target.closest(".navbar");
+        if (!dentroDeNav) cerrarMenuMovil();
+    });
+}
